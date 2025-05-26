@@ -13,6 +13,7 @@ export const Home = () => {
   const [activeTab, setActiveTab] = useState("home");
   const { state } = useLocation();
   const username = state?.user?.username || "Guest";
+  const phone = state?.user?.phone;
 
   // Mock visit history data
   const visitHistory = [
@@ -425,7 +426,7 @@ export const Home = () => {
                   <h2 className="text-xl font-bold text-gray-800">
                     {username}
                   </h2>
-                  <p className="text-gray-600">(254) 123-4567</p>
+                  <p className="text-gray-600">{phone}</p>
                   <p className="text-sm text-gray-500">
                     Member since January 2025
                   </p>

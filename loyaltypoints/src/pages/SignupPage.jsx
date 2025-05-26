@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
@@ -11,7 +12,7 @@ function SignupPage() {
     const res = await fetch("http://localhost:5000/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, phone, password }),
     });
 
     const data = await res.json();
@@ -38,7 +39,16 @@ function SignupPage() {
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
           required
-          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+        />
+
+        <input
+          type="text"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="Phone Number"
+          required
+          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
         />
 
         <input
@@ -47,7 +57,7 @@ function SignupPage() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
-          className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
         />
 
         <button
@@ -59,7 +69,7 @@ function SignupPage() {
 
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <a href="/login" className="text-yellow-600 hover:underline">
+          <a href="/" className="text-yellow-600 hover:underline">
             Log in
           </a>
         </p>
