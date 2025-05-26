@@ -13,15 +13,15 @@ Deployment: Vercel (frontend), Railway/Render (backend)
 ## ✨ Features
 
 👤 User Features
-Dummy Signup/Login (no token or email needed)
+Signup/ Login
 
-Dashboard access after login
+Dashboard access after login and signup
 
-Earn loyalty points for actions (e.g., making purchases)
+Earn loyalty points for actions (e.g., checking in)
 
 View current points
 
-Redeem rewards (optional)
+Redeem rewards
 
 Logout to return to login page
 
