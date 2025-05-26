@@ -9,7 +9,7 @@ function SignupPage() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:5000/signup", {
+    const res = await fetch("https://loyaltylink-points.onrender.com/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, phone, password }),

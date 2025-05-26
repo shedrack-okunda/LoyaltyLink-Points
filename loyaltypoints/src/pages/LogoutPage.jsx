@@ -5,7 +5,7 @@ export const Logout = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5000/logout", {
+      await fetch("https://loyaltylink-points.onrender.com/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
