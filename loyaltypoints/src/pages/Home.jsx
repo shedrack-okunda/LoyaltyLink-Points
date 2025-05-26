@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Navbar } from "../components/Navbar";
+import { Logout } from "./LogoutPage";
 
 export const Home = () => {
   const [currentPoints, setCurrentPoints] = useState(7);
@@ -8,6 +11,8 @@ export const Home = () => {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
+  const { state } = useLocation();
+  const username = state?.user?.username || "Guest";
 
   // Mock visit history data
   const visitHistory = [
@@ -19,6 +24,15 @@ export const Home = () => {
     { date: "Apr 19, 2025", time: "01:15 PM", points: 1 },
     { date: "Apr 12, 2025", time: "11:00 AM", points: 1 },
   ];
+
+  const abbreviateName = (username) => {
+    return username
+      .split(" ")
+      .map((word) => word[0].toUpperCase())
+      .join("");
+  };
+
+  const userAbbreviation = abbreviateName(username);
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -42,16 +56,16 @@ export const Home = () => {
     )}-${phoneNumber.slice(6, 10)}`;
   };
 
-  const handleCheckIn = () => {
+  const handleCheckIn = async () => {
     if (phoneNumber.length === 10) {
       setIsCheckedIn(true);
 
-      // Simulate adding a point
+      // Simulate adding a point locally first
       const newPoints = currentPoints + 1;
       setCurrentPoints(newPoints);
       setTotalVisits(totalVisits + 1);
 
-      // Check if reward is earned (10 points)
+      // Check for reward condition locally
       if (newPoints >= 10) {
         setRewardEarned(true);
         setShowConfetti(true);
@@ -71,7 +85,9 @@ export const Home = () => {
   };
 
   return (
-    <>
+    <div className="bg-gray-50 min-h-screen flex flex-col relative">
+      <Navbar />
+
       <div className="flex-1 pt-16 pb-16">
         {activeTab === "home" && (
           <div className="px-4 py-6">
@@ -403,10 +419,12 @@ export const Home = () => {
             <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
               <div className="flex items-center mb-6">
                 <div className="h-20 w-20 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  SOB
+                  {userAbbreviation}
                 </div>
                 <div className="ml-4">
-                  <h2 className="text-xl font-bold text-gray-800">Sheddy </h2>
+                  <h2 className="text-xl font-bold text-gray-800">
+                    {username}
+                  </h2>
                   <p className="text-gray-600">(254) 123-4567</p>
                   <p className="text-sm text-gray-500">
                     Member since January 2025
@@ -463,25 +481,7 @@ export const Home = () => {
                   <i className="fas fa-chevron-right text-gray-400"></i>
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer">
-                  <div className="flex items-center">
-                    <i className="fas fa-lock text-yellow-600 mr-3"></i>
-                    <span className="text-gray-800">Privacy Settings</span>
-                  </div>
-                  <i className="fas fa-chevron-right text-gray-400"></i>
-                </div>
-
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer">
-                  <div className="flex items-center">
-                    <i className="fas fa-question-circle text-yellow-600 mr-3"></i>
-                    <span className="text-gray-800">Help & Support</span>
-                  </div>
-                  <i className="fas fa-chevron-right text-gray-400"></i>
-                </div>
-
-                <button className="w-full py-3 px-4 mt-2 bg-red-100 text-red-600 font-medium rounded-lg hover:bg-red-200 transition-all duration-200 !rounded-button">
-                  Sign Out
-                </button>
+                <Logout />
               </div>
             </div>
           </div>
@@ -532,6 +532,6 @@ export const Home = () => {
           <span className="text-xs">Profile</span>
         </button>
       </div>
-    </>
+    </div>
   );
 };
