@@ -1,15 +1,15 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-let users = []; // dummy user "database"
-let currentUser = null; // dummy "session"
+let users = [];
+let currentUser = null;
 
-// Dummy login
+// login
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   const user = users.find(
@@ -21,21 +21,21 @@ app.post("/login", (req, res) => {
   res.json({ message: "Login successful", user: { username } });
 });
 
-// Dummy signup
+// signup
 app.post("/signup", (req, res) => {
-  const { username, password } = req.body;
+  const { username, phone, password } = req.body;
   const exists = users.find((u) => u.username === username);
   if (exists) return res.status(400).json({ message: "User already exists" });
 
-  users.push({ username, password });
+  users.push({ username, phone, password });
   currentUser = username;
-  res.json({ message: "Signup successful", user: { username } });
+  res.json({ message: "Signup successful", user: { username, phone } });
 });
 
-// backend/index.js or wherever your routes are
+// logout
 app.post("/logout", (req, res) => {
   // If you had sessions you'd call req.session.destroy()
   res.status(200).json({ message: "Logged out successfully" });
 });
 
-app.listen(5000, () => console.log("Backend running on http://localhost:5000"));
+app.listen(5000, () => console.log("Server running on http://localhost:5000"));
