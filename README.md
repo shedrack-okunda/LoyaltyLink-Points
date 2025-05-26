@@ -1,5 +1,11 @@
 # 🏆 Loyalty Points Reward App
 
+## Live
+
+```bash
+https://loyalty-link-points.vercel.app/
+```
+
 This is a full-stack Loyalty Points Reward System where users can sign up, earn points, view their points, and redeem rewards.
 
 ## 🧠 Technologies Used
