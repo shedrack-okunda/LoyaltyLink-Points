@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import shopRoutes from "./routes/shopRoutes.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 5001;
 connectDB();
 
 app.use("/api/auth", authRoutes);
+app.use("/api/shop", shopRoutes);
 
 app.listen(PORT, () => {
 	console.log(`Server running on http://localhost:${PORT}`);
