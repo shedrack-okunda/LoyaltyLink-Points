@@ -1,11 +1,47 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { generateShopCode } from "../utils/generateCode.js";
 
 // Register a new user
 export const registerUser = async (req, res) => {
 	try {
-		const { name, phone, password } = req.body;
+		const {
+			name,
+			phone,
+			password,
+			role,
+			shop,
+			shopCode: customerShopCode,
+		} = req.body;
+
+		if (!["shop", "customer"].includes(role)) {
+			return res.status(400).json({ message: "Invalid role" });
+		}
+
+		let shopCode = undefined;
+		let shopRef = undefined;
+
+		if (role === "shop") {
+			shopCode = generateShopCode(name);
+		}
+
+		if (role === "customer") {
+			if (!customerShopCode) {
+				return res
+					.status(400)
+					.json({ message: "Customer must provide a shop code." });
+			}
+
+			const shopUser = await User.findOne({
+				shopCode: customerShopCode,
+			});
+			if (!shopUser || shopUser.role !== "shop") {
+				return res.status(400).json({ message: "Invalid shop code." });
+			}
+
+			shopRef = shopUser._id;
+		}
 
 		const existingUser = await User.findOne({ phone });
 		if (existingUser) {
@@ -20,11 +56,19 @@ export const registerUser = async (req, res) => {
 			name,
 			phone,
 			password: hashedPassword,
+			role,
+			shop: shopRef,
+			shopCode,
 		});
 
 		await newUser.save();
 
-		res.status(201).json({ message: "User registered.", newUser });
+		const token = jwt.sign(
+			{ id: newUser._id, role: newUser.role },
+			process.env.JWT_SECRET
+		);
+
+		res.status(201).json({ message: "User registered.", newUser, token });
 	} catch (error) {
 		res.status(500).json({
 			message: "Internal server error",
@@ -51,7 +95,7 @@ export const loginUser = async (req, res) => {
 		}
 
 		const token = jwt.sign(
-			{ id: existingUser._id },
+			{ id: existingUser._id, user: existingUser.role },
 			process.env.JWT_SECRET
 		);
 
