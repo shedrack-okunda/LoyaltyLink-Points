@@ -5,20 +5,29 @@ function SignupPage() {
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
+	const [role, setRole] = useState("customer");
+	const [shopCode, setShopCode] = useState("");
 	const navigate = useNavigate();
 
 	const handleSignup = async (e) => {
 		e.preventDefault();
+
+		const payload = { name, phone, password, role };
+
+		if (role === "customer") {
+			payload.shopCode = shopCode;
+		}
+
 		// const res = await fetch("https://loyaltylink-points.onrender.com/signup", {
 		//   method: "POST",
 		//   headers: { "Content-Type": "application/json" },
-		//   body: JSON.stringify({ name, phone, password }),
+		//   body: JSON.stringify(payload),
 		// });
 
 		const res = await fetch("http://localhost:5000/api/auth/register", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ name, phone, password }),
+			body: JSON.stringify(payload),
 		});
 
 		const data = await res.json();
@@ -37,6 +46,14 @@ function SignupPage() {
 				<h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
 					Sign Up
 				</h2>
+
+				<select
+					value={role}
+					onChange={(e) => setRole(e.target.value)}
+					className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+					<option value="shop">Shop</option>
+					<option value="customer">Customer</option>
+				</select>
 
 				<input
 					type="text"
@@ -64,6 +81,17 @@ function SignupPage() {
 					required
 					className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
 				/>
+
+				{role === "customer" && (
+					<input
+						type="text"
+						value={shopCode}
+						onChange={(e) => setShopCode(e.target.value)}
+						placeholder="Enter shop code"
+						required
+						className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+					/>
+				)}
 
 				<button
 					type="submit"
